@@ -1,9 +1,8 @@
-8;marque;modele;millesime;kilometrage;categorie
+7;marque;modele;millesime;kilometrage;categorie
 AB-789-CC;Volkswagen;up;2017;25432;A
 AA-239-AE;Volkswagen;up;2017;25432;A
-AB-289-DE;dez;a;0;0;f
-AS-576-FR;r;d;0;0;c
 CD-584-AA;Fiat;500;2018;20123;A
 KL-239-AE;Volkswagen;up;2017;25432;A
-TY-457-DR;a;a;0;0;a
 ZZ-789-CC;Volkswagen;up;2017;25432;A
+ZZ-729-CC;Volkswagen;up;2017;25432;A
+ZS-729-CC;Volkswagen;up;2017;25432;A

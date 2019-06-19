@@ -1,5 +1,7 @@
+
 #ifndef VEHICULES_H
 #define VEHICULES_H
+
 
 
 typedef struct vehicules{
@@ -9,6 +11,7 @@ typedef struct vehicules{
 	short int millesime;
 	int kilometrage;
 	char categorie;
+	struct liste * teteResActu;
 }vehicules;
 
 #endif

@@ -3,20 +3,31 @@
 #include<string.h>
 #include"vehicules.h"
 #include"liste.h"
-
+#include"gestionListe.h"
 
 
 int main(void)
 {
+	//Initialisation des listes
 	liste* vehicule;
 	vehicule=lireListe(VEHICULE);
-	afficheListe(vehicule);
 	liste* client;
 	client=lireListe(CLIENT);
-	afficheListe(client);
 	liste* reservation;
 	reservation=lireListeReservation(client,vehicule);
-	afficheListe(reservation);
+	
+	
+	//Mise a jour de voiture avec les infos de reservations
+	SetListeResActuVoiture(vehicule,reservation);
+	
+	//Acces au menu
+	menu(&vehicule,&client,&reservation);
+	
+	//Sauvegarde
+	ecritListeFichier(vehicule);
+	ecritListeFichier(reservation);
+	ecritListeFichier(client);
+	
 	return 0;
 }
 
