@@ -20,6 +20,7 @@ liste* getListeVehicule(FILE* file, liste** tete)
 	fscanf(file,"%s",donne);
 	fonct(donne,&tabdonne,&nb,';');
 	maillon->data.vehicule=initialiseVehi(tabdonne[0],tabdonne[1],tabdonne[2],atoi(tabdonne[3]),atoi(tabdonne[4]),*tabdonne[5]);
+	maillon->data.vehicule.teteResActu=NULL;
 	maillon=ajouteVehiculeListe(maillon,tete);					//Ajoute avec la nouvelle voiture dans la liste
 	return maillon;
 }
@@ -383,32 +384,19 @@ liste* lireListeReservation(liste * ptrteteClient,liste * ptreTeteVoiture)
 //Affiche la liste véhicule ou reservation a partir d'un pointeur tete
 int CalcultailleChaine(liste *tete)
 {
-	liste* maillon=tete;
-	int n;
-	while (maillon !=NULL)
+	int n=0;
+	while (tete !=NULL)
 	{
 		n++;
-		maillon=maillon->suivant;
+		tete=tete->suivant;
 	}
 	return n;
 }
 
-void ecritListeFichier(liste* tete)
+void ecritListeFichierClient(liste* tete)
 {
-	int nb;
-	FILE* file;
-	if(tete->type == VEHICULE)
-	{
-		nb=CalcultailleChaine(tete);
-		file = fopen("vehicules.csv", "wt");
-		fprintf(file,"%d;marque;modele;millesime;kilometrage;categorie\n", nb);
-		for(int i=0;i<nb;i++){
-			fprintf(file,"%s;%s;%s;%d;%d;%c\n",tete->data.vehicule.immat,tete->data.vehicule.marque,tete->data.vehicule.modele,tete->data.vehicule.millesime,tete->data.vehicule.kilometrage,tete->data.vehicule.categorie);
-			tete = tete->suivant;
-		}
-	}
-	else if (tete->type == CLIENT)
-	{
+	int nb=0;
+	FILE* file;	
 		nb=CalcultailleChaine(tete);
 		file = fopen("client.csv", "wt");
 		fprintf(file,"%d;num_permis;date_naissance;date_permis;prenom;nom\n", nb);
@@ -416,22 +404,41 @@ void ecritListeFichier(liste* tete)
 			fprintf(file,"%s;%d/%d/%d;%d/%d/%d;%s;%s\n", ajouteZero(tete->data.client.num_permis), tete->data.client.date_naissance[0], tete->data.client.date_naissance[1], tete->data.client.date_naissance[2], tete->data.client.date_permis[0],tete->data.client.date_permis[1], tete->data.client.date_permis[2], tete->data.client.prenom, tete->data.client.nom);
 			tete = tete->suivant;
 		}
-	}
-	else if (tete->type == RESERVATION)
-	{
+	fclose(file);
+}
+void ecritListeFichierVoiture(liste * tete){
+	int nb=0;
+	FILE *file;
 		nb=CalcultailleChaine(tete);
+		file = fopen("vehicules.csv", "wt");
+		
+		fprintf(file,"%d;marque;modele;millesime;kilometrage;categorie\n",nb);
+		for(int i=0;i<nb;i++){
+			
+			fprintf(file,"%s;%s;%s;%d;%d;%c\n",tete->data.vehicule.immat,tete->data.vehicule.marque,tete->data.vehicule.modele,tete->data.vehicule.millesime,tete->data.vehicule.kilometrage,tete->data.vehicule.categorie);
+			tete = tete->suivant;
+		}
+		fclose(file);
+}
+
+void ecritListeFichierReservation(liste * tete){
+	
+	int nb;
+	FILE * file;
+	nb=CalcultailleChaine(tete);
 		file = fopen("reservations.csv", "wt");
 		fprintf(file,"%d;num_reservation;date_debut;date_fin;num_permis;immatriculation\n", nb);
-
+		
 		for(int i=0;i<nb;i++){
-			//~ printf("%d;%d/%d/%d;%d/%d/%d;%s;%s\n",tete->data.reservation.num_reserv,tete->data.reservation.date_debut[0],tete->data.reservation.date_debut[1],tete->data.reservation.date_debut[2],tete->data.reservation.date_fin[0],tete->data.reservation.date_fin[1],tete->data.reservation.date_fin[2],ajouteZero(tete->data.reservation.num_permis),tete->data.reservation.immat);
 			fprintf(file,"%d;%d/%d/%d;%d/%d/%d;%s;%s\n",tete->data.reservation.num_reserv,tete->data.reservation.date_debut[0],tete->data.reservation.date_debut[1],tete->data.reservation.date_debut[2],tete->data.reservation.date_fin[0],tete->data.reservation.date_fin[1],tete->data.reservation.date_fin[2],ajouteZero(tete->data.reservation.num_permis),tete->data.reservation.immat);
 
 			tete = tete->suivant;
+	
+	
 	}
-}
 	fclose(file);
 }
+
 
 char* ajouteZero(long int x)
 {
@@ -455,8 +462,6 @@ char* ajouteZero(long int x)
 }
 
 
-
-
 int CalcultailleINT(long int Valeur) {
 	int Retour = 0;
 
@@ -474,8 +479,5 @@ int CalcultailleINT(long int Valeur) {
 
 	return Retour;
 }
-
-
-
 
 

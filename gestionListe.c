@@ -12,7 +12,7 @@ void afficheListe(liste* tete)
 	if(maillon->type == VEHICULE)
 		while(maillon != NULL)
 		{
-			printf("%s;%s;%s;%hd;%d;%c\n",maillon->data.vehicule.immat,maillon->data.vehicule.marque,maillon->data.vehicule.modele,maillon->data.vehicule.millesime,maillon->data.vehicule.kilometrage,maillon->data.vehicule.categorie);
+			printf("%s;%s;%s;%hd;%d;%c;%p\n",maillon->data.vehicule.immat,maillon->data.vehicule.marque,maillon->data.vehicule.modele,maillon->data.vehicule.millesime,maillon->data.vehicule.kilometrage,maillon->data.vehicule.categorie,maillon->data.vehicule.teteResActu);
 			
 		maillon = maillon->suivant;
 		}
@@ -64,15 +64,10 @@ void menu(liste **Lvoiture,liste **client,liste **Lreservation )
 		}
 		if(strcmp(cmd,"test")==0)
 		{
-			int d[3];
-			int dd[3];
-			d[0]=1;
-			d[1]=3;
-			d[2]=2000;
-			dd[0]=1;
-			dd[1]=4;
-			dd[2]=1999;
-			printf("%d/%d/%d  test %d/%d/%d egale %d\n",d[0],d[1],d[2],dd[0],dd[1],dd[2],superDate(d,dd));
+			char *c;
+			c=malloc(sizeof(char)*1);
+			scanf("%s",c);
+			printf("%c\n",c[0]);
 		}
 	}
 	
@@ -180,29 +175,25 @@ void ajouteReservationScan(liste ** Lres, liste * voiture, liste* Lclient,int ta
 	
 	int date_debut[3];
 	int date_fin[3];
+	char *categorie;
+	categorie=malloc(sizeof(char)*1);
 	
 	
-	int testReservation=1;
+	printf("Date_debut : \n ");
+	scanfDate(date_debut);
+	printf("Date_fin : \n ");	
+	scanfDate(date_fin);
+	printf("Categorie : ");
+	scanf("%s",categorie);
+	ParcourVoitureLibre(voiture,date_debut,date_fin,categorie[0]);
+	ChoixVehicule(voiture,date_debut,date_fin);
+}
+void scanfDate(int date[3]){
+	char * chaine;
+	chaine=malloc(sizeof(char)*11);
+	scanf("%s",chaine);
+	Decoupedate(chaine,date);
 	
-	while(testReservation)
-	{
-		printf("Date_debut : \n ");
-		printf("Jour : ");
-		scanf("%d",&date_debut[0]);
-		printf("Mois :  ");
-		scanf("%d",&date_debut[1]);
-		printf("Année :  ");
-		scanf("%d",&date_debut[2]);
-		
-		printf("Date_fin : \n ");
-		printf("Jour :  ");
-		scanf("%d",&date_fin[0]);
-		printf("Mois :  ");
-		scanf("%d",&date_fin[1]);
-		printf("Année :  ");
-		scanf("%d",&date_fin[2]);
-		ChoixVehicule(voiture,date_debut,date_fin);
-	}
 }
 //Choisi le vehicule idéal pour un reservation
 void ChoixVehicule(liste * voiture,int date_debut[3],int date_fin[3])
@@ -249,6 +240,28 @@ int TestHistoDate(int date_debut[3],int date_fin[3], vehicules v)
 	}
 	return test;
 }
+
+//Verifie est parcour les voitures libres
+void ParcourVoitureLibre(liste * voiture, int date_debut[3],int date_fin[3], char categorie)
+{
+	liste * maillon;
+	vehicules * v;
+	maillon=voiture;
+	while(maillon!=NULL){
+		if(TestHistoDate(date_debut,date_fin,maillon->data.vehicule)==0){
+			if(maillon->data.vehicule.categorie<=categorie)
+			{
+				printf("%s;%s;%s;%hd;%d;%c\n",maillon->data.vehicule.immat,maillon->data.vehicule.marque,maillon->data.vehicule.modele,maillon->data.vehicule.millesime,maillon->data.vehicule.kilometrage,maillon->data.vehicule.categorie);
+			
+			}
+		}
+		maillon=maillon->suivant;
+	}
+	
+	
+}
+
+
 
 //Compre 2 intervalle de chaine et renvoie 1 si elle se chevauche
 int seChevauche(int date_debut1[3],int date_fin1[3],int date_debut2[3],int date_fin2[3])
@@ -304,7 +317,17 @@ int superInt(int x,int y)
 		return 0;
 	}
 }
-
+char lireCaractere() 
+{ 
+    char caractere = 0;
+ 
+    caractere = getchar(); // On lit le premier caractère
+ 
+    // On lit les autres caractères mémorisés un à un jusqu'au \n (pour les effacer) 
+    while (getchar() != '\n') ;
+ 
+    return caractere; // On retourne le premier caractère qu'on a lu 
+}
 
 
 

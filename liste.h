@@ -47,7 +47,9 @@ vehicules initialiseVehi(char immat[10],char marque[15], char modele[15], short 
 
 int CalcultailleINT(long int Valeur);
 char* ajouteZero(long int x);
-void ecritListeFichier(liste* tete);
+void ecritListeFichierClient(liste* tete);
+void ecritListeFichierReservation(liste * tete);
+void ecritListeFichierVoiture(liste * tete);
 clients initialiseClient(long int num_permis,int date_naissance[3],int date_permis[3], char prenom[15],char nom[30]);
 void Decoupedate(char * chaine,int date[3]);
 reservations initialiseRes(int num_reserv, int date_debut[3], int date_fin[3], long int num_permis,char immat[10]);

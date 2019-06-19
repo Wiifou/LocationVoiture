@@ -11,6 +11,7 @@ int main(void)
 	//Initialisation des listes
 	liste* vehicule;
 	vehicule=lireListe(VEHICULE);
+	
 	liste* client;
 	client=lireListe(CLIENT);
 	liste* reservation;
@@ -22,11 +23,12 @@ int main(void)
 	
 	//Acces au menu
 	menu(&vehicule,&client,&reservation);
-	
 	//Sauvegarde
-	ecritListeFichier(vehicule);
-	ecritListeFichier(reservation);
-	ecritListeFichier(client);
+	
+	ecritListeFichierClient(client);
+	ecritListeFichierVoiture(vehicule);
+	ecritListeFichierReservation(reservation);
+	
 	
 	return 0;
 }
