@@ -346,7 +346,7 @@ vehicules* detectVoiture(liste* tete, char  *immat)
 clients* detectClient(liste* tete, long int num)
 {
 	liste* maillon = tete;
-	while(num != maillon->data.client.num_permis  && maillon != NULL)
+	while(maillon != NULL && num != maillon->data.client.num_permis)
 	{
 		maillon = maillon->suivant;
 	}

@@ -62,6 +62,11 @@ void menu(liste **Lvoiture,liste **client,liste **Lreservation )
 		{
 			afficheHisto(*Lvoiture);
 		}
+		if(strcmp(cmd,"ajouteclient")==0)
+		{
+			ajouteClient(client);
+		}
+		
 		if(strcmp(cmd,"test")==0)
 		{
 			char *c;
@@ -176,17 +181,62 @@ void ajouteReservationScan(liste ** Lres, liste * voiture, liste* Lclient,int ta
 	int date_debut[3];
 	int date_fin[3];
 	char *categorie;
+	vehicules * ptrV;
+	clients * ptrC;
 	categorie=malloc(sizeof(char)*1);
 	
+	liste* maillon = NULL;
+	maillon = malloc(sizeof(*maillon));
+	maillon->suivant=NULL;
 	
-	printf("Date_debut : \n ");
+	
+	ptrC=ChoixClient(Lclient);
+	printf("Date_debut : ");
 	scanfDate(date_debut);
-	printf("Date_fin : \n ");	
+	printf("Date_fin :  ");	
 	scanfDate(date_fin);
 	printf("Categorie : ");
 	scanf("%s",categorie);
+	printf("\n");
 	ParcourVoitureLibre(voiture,date_debut,date_fin,categorie[0]);
-	ChoixVehicule(voiture,date_debut,date_fin);
+	printf("\n");
+	ptrV=ChoixVehicule(voiture,date_debut,date_fin);
+	maillon->data.reservation=initialiseRes(CalcultailleChaine(*Lres)+1,date_debut,date_fin,ptrC->num_permis,ptrV->immat);
+	maillon->data.reservation.veve=ptrV;
+	maillon->data.reservation.client=ptrC;
+	maillon=ajouteReservation(maillon,Lres);
+	SetListeResActuVoiture(voiture,*Lres);
+	
+}
+
+
+void ajouteClient(liste ** client)
+{
+	long int num_permis;
+	int date_naissance[3];
+	int  date_permis[3];
+	char prenom[15];
+	char nom[30];
+
+
+	liste* maillon = NULL;
+	maillon = malloc(sizeof(*maillon));
+	maillon->suivant=NULL;
+
+
+	printf("num_permis : ");
+	scanf("%ld",&num_permis);
+	printf("date_naissance : ");
+	scanfDate(date_naissance);
+	printf("date_permis : ");
+	scanfDate(date_permis);
+	printf("prenom : ");
+	scanf("%s",prenom);
+	printf("nom : ");
+	scanf("%s",nom);
+	maillon->data.client=initialiseNullC();
+	maillon->data.client=initialiseClient(num_permis,date_naissance,date_permis,prenom,nom);
+	maillon=ajouteClientListe(maillon,client);
 }
 void scanfDate(int date[3]){
 	char * chaine;
@@ -195,8 +245,26 @@ void scanfDate(int date[3]){
 	Decoupedate(chaine,date);
 	
 }
+//~ Choisi un client pour un reservation 
+clients * ChoixClient(liste * clientL){
+	int test=1;
+	int choix;
+	long int num;
+	clients * c=NULL;
+	while(test){
+		printf("Numéro de peris du client : ");
+		scanf("%ld",&num);
+		c=detectClient(clientL,num);
+		if(c==NULL){
+			printf("Client introuable créer un nouvaux client ? 1/0 y/n");
+		}else{
+			test=0;
+			return c;
+		}	
+	}
+}
 //Choisi le vehicule idéal pour un reservation
-void ChoixVehicule(liste * voiture,int date_debut[3],int date_fin[3])
+vehicules * ChoixVehicule(liste * voiture,int date_debut[3],int date_fin[3])
 {
 	char immat[10];
 	vehicules * ptrV;
@@ -206,23 +274,22 @@ void ChoixVehicule(liste * voiture,int date_debut[3],int date_fin[3])
 		{
 			printf("Immatriculation : ");
 			scanf("%s",immat);
-			if(strlen(immat)==9 && immat[2]=='-' && immat[6]=='-')
-			{
-				test=0;
-			}
 			ptrV=detectVoiture(voiture,immat);
 			if(ptrV==NULL)
 			{
-				printf("Il n'y a aucune voiture avec cette plaque\n");
+				
+				test=1;
+				printf("Il n'y a aucune voiture avec cette plaque \n");
 			}
 			else
 			{
+				test=0;
 				x=TestHistoDate(date_debut,date_fin,*ptrV);
-				printf("x=%d\n",x);
 				if(x==1)
 				{
 					printf("Cette voiture n'est pas libre à ces dates\n");
 				}
+				return ptrV;
 			}
 			
 		}
@@ -245,7 +312,7 @@ int TestHistoDate(int date_debut[3],int date_fin[3], vehicules v)
 void ParcourVoitureLibre(liste * voiture, int date_debut[3],int date_fin[3], char categorie)
 {
 	liste * maillon;
-	vehicules * v;
+	
 	maillon=voiture;
 	while(maillon!=NULL){
 		if(TestHistoDate(date_debut,date_fin,maillon->data.vehicule)==0){

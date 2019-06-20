@@ -1,4 +1,7 @@
-3;num_reservation;date_debut;date_fin;num_permis;immatriculation
+6;num_reservation;date_debut;date_fin;num_permis;immatriculation
 1;10/2/4000;11/3/4000;098765438765;AB-789-CC
 2;5/1/2048;5/2/2048;049857698766;AA-047-MM
 3;12/2/4000;15/3/4000;098765438765;AB-789-CC
+4;12/3/2018;12/4/2018;098765438765;AB-789-CC
+5;13/8/2019;14/8/2019;098765438765;AA-239-AE
+6;13/9/2019;16/9/2019;049857698766;AA-239-AE
